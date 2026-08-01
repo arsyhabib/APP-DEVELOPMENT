@@ -1,1 +1,62 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ukur Tanah Realtime</title><style>body{font-family:system-ui;margin:0;padding:24px;background:#eef7f5;color:#123}main{max-width:680px;margin:auto;background:#fff;padding:24px;border-radius:18px;box-shadow:0 10px 30px #0001}a{color:#087f73}</style></head><body><main><h1>Ukur Tanah Realtime</h1><p>Deployment sedang disiapkan.</p></main></body></html>
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#075e54">
+<title>Ukur Tanah Realtime</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--p:#087f73;--d:#b91c1c;--a:#d97706;--bg:rgba(255,255,255,.94);--bd:rgba(8,127,115,.2)}*{box-sizing:border-box}html,body,#map{height:100%;margin:0}body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#123;overflow:hidden}#map{background:#dbe7e5}.top{position:fixed;z-index:1000;top:max(9px,env(safe-area-inset-top));left:9px;right:9px;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:18px;box-shadow:0 10px 32px #064e3b2e;backdrop-filter:blur(15px);display:flex;align-items:center;justify-content:space-between;gap:10px}.top h1{font-size:17px;margin:0}.top p{font-size:11px;margin:3px 0 0;color:#607070}.pill{padding:8px 10px;background:#fff;border:1px solid var(--bd);border-radius:99px;font-size:12px;font-weight:800;white-space:nowrap}.panel{position:fixed;z-index:1000;left:9px;right:9px;bottom:max(9px,env(safe-area-inset-bottom));max-height:57vh;overflow:auto;padding:10px 12px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:22px;box-shadow:0 10px 32px #064e3b36;backdrop-filter:blur(15px)}.handle{width:45px;height:5px;border-radius:9px;background:#c8d5d2;margin:0 auto 9px}.metrics{display:grid;grid-template-columns:1.25fr 1fr .8fr;gap:7px}.metric{padding:9px;border-radius:13px;border:1px solid var(--bd);background:#fff}.metric span{font-size:10px;color:#607070;font-weight:750}.metric b{display:block;font-size:17px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.metric small{font-size:9px;color:#607070}.row{display:grid;grid-template-columns:1.35fr 1fr;gap:8px;margin-top:8px}.row.four{grid-template-columns:repeat(4,1fr)}button,select{font:inherit}.btn{min-height:47px;border:0;border-radius:14px;padding:9px;font-weight:850}.primary{background:var(--p);color:#fff}.accent{background:#fff7df;color:#92400e;border:1px solid #f4c35e}.soft{background:#f3f8f7;border:1px solid var(--bd);color:#183534}.danger{background:#fff0f0;border:1px solid #fecaca;color:var(--d)}.small{font-size:11px;min-height:40px;padding:5px}.btn:disabled{opacity:.42}.status{font-size:11px;line-height:1.35;margin-top:8px;padding:9px 10px;border-radius:12px;background:#fff8dc;border:1px solid #f4d47d;color:#805400}.status.ok{background:#eafbf6;border-color:#81dec8;color:#075e54}.status.err{background:#fff0f0;border-color:#f3b2b2;color:#991b1b}details{margin-top:8px;border-top:1px solid var(--bd);padding-top:8px}summary{font-size:12px;font-weight:850;color:#075e54}.settings{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.settings label{display:grid;gap:4px;font-size:10px;font-weight:750;color:#607070}.settings select{min-height:39px;border-radius:11px;border:1px solid var(--bd);padding:6px;background:#fff}.check{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--bd);border-radius:11px;padding:8px;font-size:11px}.leaflet-control-zoom,.leaflet-control-layers{margin-top:78px!important;border:0!important;box-shadow:0 6px 20px #0002!important;border-radius:12px!important;overflow:hidden}.cross{position:fixed;z-index:700;left:50%;top:50%;width:22px;height:22px;transform:translate(-50%,-50%);display:none;pointer-events:none}.cross:before,.cross:after{content:"";position:absolute;background:#dc2626;box-shadow:0 0 0 1px #fff}.cross:before{width:22px;height:2px;top:10px}.cross:after{width:2px;height:22px;left:10px}.cross.show{display:block}@media(min-width:760px){.top,.panel{width:410px;right:auto;left:16px}.panel{bottom:16px;max-height:calc(100vh - 110px)}.leaflet-control-zoom,.leaflet-control-layers{margin-top:10px!important}}
+</style>
+</head>
+<body>
+<div id="map"></div><div id="cross" class="cross"></div>
+<header class="top"><div><h1>Ukur Tanah Realtime</h1><p id="sub">Tekan Mulai GPS di area terbuka</p></div><div id="pill" class="pill">GPS mati</div></header>
+<section class="panel"><div class="handle"></div>
+<div class="metrics">
+<div class="metric"><span>LUAS</span><b id="area">0 m²</b><small id="ha">0 ha</small></div>
+<div class="metric"><span>KELILING</span><b id="peri">0 m</b><small id="km">0 km</small></div>
+<div class="metric"><span>TITIK</span><b id="count">0</b><small id="acc">Akurasi —</small></div>
+</div>
+<div class="row"><button id="start" class="btn primary">▶ Mulai GPS</button><button id="record" class="btn accent" disabled>＋ Rekam sudut</button></div>
+<div class="row four"><button id="center" class="btn soft small" disabled>◎ Posisi</button><button id="manual" class="btn soft small">✥ Titik peta</button><button id="undo" class="btn soft small" disabled>↶ Batal</button><button id="reset" class="btn danger small" disabled>Hapus</button></div>
+<div id="status" class="status">Berdiri di sudut tanah, tunggu akurasi membaik, lalu tekan <b>Rekam sudut</b>.</div>
+<details><summary>Pengaturan dan ekspor</summary><div class="settings">
+<label>Batas akurasi<select id="max"><option value="3">3 meter</option><option value="5" selected>5 meter</option><option value="8">8 meter</option><option value="10">10 meter</option><option value="20">20 meter</option></select></label>
+<label>Jarak tracking<select id="dist"><option value="2">2 meter</option><option value="3">3 meter</option><option value="5" selected>5 meter</option><option value="10">10 meter</option></select></label>
+<div class="check"><span>Tracking otomatis saat berjalan</span><input id="auto" type="checkbox"></div>
+<div class="check"><span>Ikuti posisi pada peta</span><input id="follow" type="checkbox" checked></div>
+<button id="export" class="btn soft" disabled style="grid-column:1/-1">Unduh GeoJSON</button>
+</div></details>
+</section>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const $=id=>document.getElementById(id),E={area:$('area'),ha:$('ha'),peri:$('peri'),km:$('km'),count:$('count'),acc:$('acc'),sub:$('sub'),pill:$('pill'),start:$('start'),record:$('record'),center:$('center'),manual:$('manual'),undo:$('undo'),reset:$('reset'),status:$('status'),max:$('max'),dist:$('dist'),auto:$('auto'),follow:$('follow'),cross:$('cross'),export:$('export')};
+const map=L.map('map',{zoomControl:true}).setView([-0.228,100.632],15);
+const street=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:21,attribution:'© OpenStreetMap'}).addTo(map);
+const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:21,attribution:'Esri'});
+L.control.layers({'Peta jalan':street,'Satelit':sat}).addTo(map);
+let pts=[],watch=null,pos=null,user=null,circle=null,vertices=[],manual=false,first=true;
+const line=L.polyline([],{color:'#087f73',weight:4}).addTo(map),poly=L.polygon([],{color:'#087f73',weight:3,fillColor:'#14b8a6',fillOpacity:.2}).addTo(map);
+const rad=n=>n*Math.PI/180,fmt=(n,d=1)=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:d}).format(n||0);
+function distance(a,b){const R=6371008.8,dLat=rad(b.lat-a.lat),dLon=rad(b.lng-a.lng),x=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLon/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
+function area(p){if(p.length<3)return 0;const R=6378137;let a=0;for(let i=0;i<p.length;i++){const x=p[i],y=p[(i+1)%p.length];a+=rad(y.lng-x.lng)*(2+Math.sin(rad(x.lat))+Math.sin(rad(y.lat)))}return Math.abs(a*R*R/2)}
+function perimeter(p){if(p.length<2)return 0;let d=0;for(let i=1;i<p.length;i++)d+=distance(p[i-1],p[i]);if(p.length>2)d+=distance(p[p.length-1],p[0]);return d}
+function msg(t,type=''){E.status.className='status '+type;E.status.innerHTML=t}
+function draw(){const ll=pts.map(p=>[p.lat,p.lng]);line.setLatLngs(ll);poly.setLatLngs(pts.length>2?ll:[]);vertices.forEach(v=>map.removeLayer(v));vertices=pts.map((p,i)=>L.circleMarker([p.lat,p.lng],{radius:6,color:'#fff',weight:2,fillColor:i?'#087f73':'#dc2626',fillOpacity:1}).addTo(map).bindTooltip('Titik '+(i+1)));const a=area(pts),d=perimeter(pts);E.area.textContent=fmt(a,a<100?2:1)+' m²';E.ha.textContent=fmt(a/10000,4)+' ha';E.peri.textContent=fmt(d,1)+' m';E.km.textContent=fmt(d/1000,3)+' km';E.count.textContent=pts.length;E.undo.disabled=E.reset.disabled=!pts.length;E.export.disabled=pts.length<3;if(pts.length>2)msg('Luas sementara <b>'+fmt(a,1)+' m²</b>. Tambahkan titik pada setiap belokan batas.','ok')}
+function add(lat,lng,source){pts.push({lat,lng,source,time:new Date().toISOString()});draw()}
+function quality(a){const m=+E.max.value;E.acc.textContent='Akurasi ±'+fmt(a,1)+' m';E.pill.textContent='GPS ±'+fmt(a,1)+' m';E.sub.textContent=a<=m?'GPS siap merekam':'Tunggu akurasi membaik';E.record.disabled=a>m;E.pill.style.color=a<=m?'#087f73':a<=m*2?'#a16207':'#b91c1c'}
+function got(p){const {latitude:lat,longitude:lng,accuracy}=p.coords;pos={lat,lng,accuracy};quality(accuracy);E.center.disabled=false;if(!user){user=L.circleMarker([lat,lng],{radius:8,color:'#fff',weight:3,fillColor:'#2563eb',fillOpacity:1}).addTo(map);circle=L.circle([lat,lng],{radius:accuracy,color:'#2563eb',weight:1,fillOpacity:.1}).addTo(map)}else{user.setLatLng([lat,lng]);circle.setLatLng([lat,lng]).setRadius(accuracy)}if(E.follow.checked||first){map.setView([lat,lng],Math.max(map.getZoom(),18));first=false}if(E.auto.checked&&accuracy<=+E.max.value){const last=pts.at(-1);if(!last||distance(last,pos)>=+E.dist.value)add(lat,lng,'GPS otomatis')}}
+function fail(e){const x={1:'Izin lokasi ditolak. Aktifkan lokasi presisi untuk browser.',2:'GPS tidak tersedia. Pindah ke area terbuka.',3:'GPS terlalu lama merespons.'};msg(x[e.code]||e.message,'err');E.pill.textContent='GPS gagal';E.record.disabled=true}
+E.start.onclick=()=>{if(!navigator.geolocation)return msg('Browser tidak mendukung GPS.','err');if(watch!==null){navigator.geolocation.clearWatch(watch);watch=null;E.start.textContent='▶ Mulai GPS';E.start.className='btn primary';E.record.disabled=true;E.pill.textContent='GPS dijeda';return msg('GPS dijeda. Titik tetap tersimpan.')}E.start.textContent='■ Hentikan GPS';E.start.className='btn danger';msg('Menghubungkan ke GPS. Tunggu di area terbuka…');watch=navigator.geolocation.watchPosition(got,fail,{enableHighAccuracy:true,maximumAge:0,timeout:25000})};
+E.record.onclick=()=>{if(!pos)return;const m=+E.max.value;if(pos.accuracy>m)return msg('Akurasi masih ±'+fmt(pos.accuracy,1)+' m. Tunggu sampai di bawah '+m+' m.');add(pos.lat,pos.lng,'GPS manual');msg('Titik '+pts.length+' direkam. Berjalan ke sudut berikutnya.','ok')};
+E.center.onclick=()=>pos&&map.setView([pos.lat,pos.lng],19);
+E.manual.onclick=()=>{manual=!manual;E.cross.classList.toggle('show',manual);if(manual){E.manual.textContent='＋ Tambah tengah';msg('Geser peta sampai tanda silang tepat pada sudut tanah, lalu tekan Tambah tengah.')}else{const c=map.getCenter();add(c.lat,c.lng,'Peta manual');E.manual.textContent='✥ Titik peta';msg('Titik peta ditambahkan.','ok')}};
+E.undo.onclick=()=>{pts.pop();draw();if(!pts.length)msg('Semua titik telah dibatalkan.')};
+E.reset.onclick=()=>{if(confirm('Hapus seluruh titik?')){pts=[];draw();msg('Pengukuran dikosongkan.')}};
+E.max.onchange=()=>pos&&quality(pos.accuracy);
+E.export.onclick=()=>{const c=[...pts.map(p=>[p.lng,p.lat]),[pts[0].lng,pts[0].lat]],data={type:'FeatureCollection',features:[{type:'Feature',properties:{name:'Hasil Pengukuran Tanah',area_m2:+area(pts).toFixed(2),perimeter_m:+perimeter(pts).toFixed(2),created_at:new Date().toISOString()},geometry:{type:'Polygon',coordinates:[c]}}]},u=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/geo+json'})),a=document.createElement('a');a.href=u;a.download='ukur-tanah-'+new Date().toISOString().slice(0,10)+'.geojson';a.click();URL.revokeObjectURL(u)};
+addEventListener('beforeunload',()=>watch!==null&&navigator.geolocation.clearWatch(watch));
+</script>
+</body></html>
